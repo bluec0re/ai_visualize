@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <link href="css/normalize.css" rel="stylesheet" type="text/css">
+    <link href="css/joint.min.css" rel="stylesheet" type="text/css">
+    <link href="css/main.css" rel="stylesheet" type="text/css">
+    <script src="js/vendor/jquery-1.10.2.min.js"></script>
+    <script src="js/vendor/joint.min.js"></script>
+    <script src="js/vendor/joint.layout.DirectedGraph.min.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/vendor/helpers.js"></script>
+    <style>
+        #graph-container {
+            border: 1px solid gray;
+            position: relative;
+            width: 700px;
+            height: 700px;
+            overflow: scroll;
+            margin-top: 6px;
+            float: left;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <label for="algorithm_select">Algorithm:</label> <select id="algorithm_select">
+            <option>---</option>
+        </select>
+    </div>
+    <div id="add_form">
+        <label><input type="radio" name="cell_type" value="start"> Start</label>
+        <label><input type="radio" name="cell_type" value="end"> End</label>
+        <label><input type="radio" name="cell_type" value="block"> Block</label>
+        <label><input type="radio" name="cell_type" value="delete"> Delete</label>
+        <div class="additional_options"></div>
+    </div>
+    <div id="graph-container"></div>
+
+    <div id="edit_form" class="hidden">
+        <div class="additional_options"></div>
+        <button id="change_button">Change</button><button id="delete_button">Delete</button>
+    </div>
+    <div class="clearfix"></div>
+    <div id="controlpanel"></div>
+
+
+    <script>
+        var algorithms = {};
+    </script>
+    <script src="js/grid.js"></script>
+    <script src="js/algorithms/breathfirst.js"></script>
+    <script src="js/algorithms/depthfirst.js"></script>
+    <script src="js/algorithms/astar.js"></script>
+    <script>
+        var grid = new Grid('#graph-container');
+        grid.buildGrid(30, 30);
+        $.each(algorithms, function(name, algo){
+             $('#algorithm_select').append($('<option></option>').text(name).data('instance', algo))
+        });
+
+        $('#algorithm_select').change(function() {
+            $('#controlpanel').html('');
+            $('#editform').find('.additional_options').html('');
+            $('#add_form').find('.additional_options').html('');
+            var obj = $(this).find(":selected").data('instance');
+            if(obj)
+                (new obj(grid)).setup();
+        });
+    </script>
+</body>
+</html>
